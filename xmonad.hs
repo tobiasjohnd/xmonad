@@ -9,9 +9,6 @@ import XMonad.Actions.SpawnOn
 import XMonad.Layout.Spacing
 import XMonad.Layout.NoBorders
 
-
-
-
 main :: IO ()
 main = xmonad $ ewmhFullscreen . ewmh $ myConfig
 
@@ -22,13 +19,15 @@ myConfig = def
     , manageHook = myManageHook
     , workspaces = myWorkspaces
     , startupHook = myStartupHook
+    , focusFollowsMouse = False
     }
     `additionalKeysP` 
     [ ("M-b", spawn "vivaldi")
-    , ("M-x", kill)
-    , ("M-w", spawn "walset")
+    , ("M-w", kill)
     , ("M-<Space>", spawn "dmenu_run")
     , ("M-f", sendMessage NextLayout)
+    --show time in notification
+    , ("M-t", spawn "dunstify Time \"$(date)\"")
     ]
 
 myManageHook :: ManageHook
@@ -51,9 +50,10 @@ myWorkspaces = ["term", "web", "3", "4", "5", "6", "7", "music", "chat"]
 myStartupHook :: X ()
 myStartupHook = do
   spawnOnce "picom"
-  spawnOnce "setxkbmap gb extd"
+  spawnOnce "setxkbmap -layout gb -variant altgr-intl"
   spawnOnce "walset"
   spawnOnOnce "term" "alacritty"
   spawnOnOnce "web" "vivaldi"
   spawnOnce "discord"
   spawnOnce "spotify"
+  spawn "killall dunst; notify-send 'Reloaded configuration'"
