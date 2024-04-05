@@ -28,6 +28,7 @@ myConfig = def
     , ("M-f", sendMessage NextLayout)
     --show time in notification
     , ("M-t", spawn "dunstify Time \"$(date)\"")
+    , ("M-a", toggleSystray)
     ]
 
 myManageHook :: ManageHook
@@ -47,9 +48,13 @@ myLayouts = tiled ||| Full
 
 myWorkspaces = ["term", "web", "3", "4", "5", "6", "7", "music", "chat"]
 
+toggleSystray = do
+    spawn "killall stalonetray || stalonetray"
+
 myStartupHook :: X ()
 myStartupHook = do
   spawnOnce "picom"
+  spawnOnce "nm-applet"
   spawnOnce "setxkbmap -layout gb -variant altgr-intl"
   spawnOnce "walset"
   spawnOnOnce "term" "alacritty"
